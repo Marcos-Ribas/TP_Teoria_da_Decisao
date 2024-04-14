@@ -1,6 +1,3 @@
-# Lendo o arquivo CSV
-import csv
-
 coordenadas = []
 demanda = []
 
@@ -55,33 +52,30 @@ with open('clientes.csv', 'r') as file:
 
 PAs = []
 
-for i in range(40):
-    for j in range(40):
-        PAs.append((i,j))
+for i in range(80):
+    for j in range(80):
+        PAs.append((i*5,j*5))
 
 distancias = []
 
 for dado in dados:
+    cont = 0
     A = []
     for PA in PAs:
         A.append(distancia_euclidiana_entre_tuplas(dado,PA))
+        cont+=1
     
     distancias.append(A)
 
-nome_arquivo = 'distancias.csv'
+nome_arquivo = 'distancias.txt'
 
-# Abrir o arquivo CSV em modo de escrita
-with open(nome_arquivo, 'w', newline='') as arquivo_csv:
-    escritor_csv = csv.writer(arquivo_csv)
-    
+# Abrir o arquivo de texto em modo de escrita
+with open(nome_arquivo, 'w') as arquivo_txt:
     # Iterar sobre cada vetor no vetor de vetores
     for vetor in distancias:
-        # Escrever o vetor atual como uma linha no arquivo CSV
-        escritor_csv.writerow(vetor)
+        # Converter os elementos do vetor para strings e juntá-los em uma única linha
+        linha = ' '.join(map(str, vetor)) + '\n'
+        # Escrever a linha no arquivo de texto
+        arquivo_txt.write(linha)
 
-print("Arquivo CSV foi criado com sucesso.")
-
-    
-        
-
-
+print("Arquivo de texto foi criado com sucesso.")
