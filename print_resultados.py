@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import random
 
-def print_user(users):
+def plot_user(users):
     coordenadas = []
 
     for user in users:
@@ -36,6 +36,7 @@ def print_solucao(solucao):
         print("\n",cont)
         cont = 0
         print(PA.banda_disponivel)
+        print("------------------------------")
 
 
     
@@ -82,3 +83,31 @@ def print_plano_cartesiano(solucao):
     plt.title(f'Número de user atendidos: {contador_users} \n número de PAs utilizados: {len(solucao)}')
     # Mostrar o gráfico 
     plt.show()
+
+def print_user(users):
+    for user in users:
+        print(user.coordenadas, " ", user.user_atendido)
+
+def plot_PAs(PAs):
+    coordenadas = []
+
+    for PA in PAs:
+        coordenadas.append(PA.coordenadas)
+    
+
+    # Separando as coordenadas x e y das tuplas
+    coordenadas_x = [tupla[0] for tupla in coordenadas]
+    coordenadas_y = [tupla[1] for tupla in coordenadas]
+
+    # Plotando as coordenadas no plano cartesiano
+    plt.scatter(coordenadas_x, coordenadas_y, color='blue')
+
+    # Adicionando título e rótulos aos eixos
+    plt.title("Localização dos PAs")
+    plt.xlabel("Coordenada X")
+    plt.ylabel("Coordenada Y")
+
+    # Exibindo o gráfico
+    plt.grid(True)
+    plt.show()
+
