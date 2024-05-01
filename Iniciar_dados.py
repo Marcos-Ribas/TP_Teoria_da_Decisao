@@ -1,3 +1,5 @@
+# iniciar_dados.py
+
 import numpy as np
 
 MALHA_PAS = 80
@@ -16,9 +18,6 @@ class usuarios:
     def __init__(self, coordenadas = (0,0), demanda = 0):
         self.coordenadas = coordenadas
         self.demandaRede = demanda
-
-
-
 
 class pontos_acesso:
 

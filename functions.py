@@ -1,22 +1,49 @@
+# functions.py
+
 import numpy as np
 import random
 from Gerar_solucao import avaliar_fit
 from Gerar_solucao import get_solution
 
-def Neighborhood_change(solucao_atual, prox_solucao, k):
-    n_PAsAtual, distancia_totalAtual = avaliar_fit(get_solution(solucao_atual)[0])
-    n_PAsProx, distancia_totalPRox = avaliar_fit(get_solution(prox_solucao)[0])
+def neighborhood_change(solucao_atual, prox_solucao, k, objetivo_otimizacao = "ambos"):
+
+    n_pas_atual, distancia_total_atual = avaliar_fit(get_solution(solucao_atual)[0])
+    n_pas_prox, distancia_total_prox = avaliar_fit(get_solution(prox_solucao)[0])
     melhor_solucao = solucao_atual
 
-    if(n_PAsProx < n_PAsAtual):
-        melhor_solucao = prox_solucao
-        print("solucao mudou")
-        k = 1
+    if(objetivo_otimizacao == "numero_pas"):
+
+        if(n_pas_prox < n_pas_atual):
+            melhor_solucao = prox_solucao
+            print("solucao mudou")
+            k = 1
+        
+        else:
+            k = k+1
+
+        return melhor_solucao, k
+    
+    elif(objetivo_otimizacao == "distancias"):
+        if distancia_total_prox < distancia_total_atual:
+            melhor_solucao = prox_solucao
+            print("solucao mudou")
+            k = 1
+        else:
+            k = k + 1
+
+        return melhor_solucao, k
     
     else:
-        k = k+1
 
-    return melhor_solucao, k
+        if(n_pas_prox < n_pas_atual and distancia_total_prox < distancia_total_atual):
+            melhor_solucao = prox_solucao
+            print("solucao mudou")
+            k = 1
+        
+        else:
+            k = k+1
+
+        return melhor_solucao, k
 
 
 def shake(vetor_prioridades, k):

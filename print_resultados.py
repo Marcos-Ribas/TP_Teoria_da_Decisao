@@ -1,3 +1,5 @@
+# print_resultados.py
+
 import matplotlib.pyplot as plt
 import random
 
@@ -26,18 +28,17 @@ def plot_user(users):
 
 def print_solucao(solucao):
     cont = 0
-    for PA in solucao:
-        user_atendidos = PA.usuarios_atendidos
-        print("Usuários atendidos pelo PA:", PA.coordenadas, ":")
+    for pa in solucao:
+        user_atendidos = pa.usuarios_atendidos
+        print("Usuários atendidos pelo PA:", pa.coordenadas, ":")
         for elemento in user_atendidos:
             print(elemento.coordenadas, end='')
             cont += 1
         
         print("\n",cont)
         cont = 0
-        print(PA.banda_disponivel)
+        print(pa.banda_disponivel)
         print("------------------------------")
-
 
     
 def print_plano_cartesiano(solucao):
@@ -45,18 +46,18 @@ def print_plano_cartesiano(solucao):
 
     # Lista de vetores de pontos
     vetores = []
-    coordenadas_PAs = []
+    coordenadas_pas = []
     contador_users = 0
 
-    for PA in solucao:
-        user_atendidos = PA.usuarios_atendidos
+    for pa in solucao:
+        user_atendidos = pa.usuarios_atendidos
         aux = []
         for elemento in user_atendidos:
             aux.append(elemento.coordenadas)
             contador_users+=1
         
         vetores.append(aux)
-        coordenadas_PAs.append(PA.coordenadas)
+        coordenadas_pas.append(pa.coordenadas)
 
     # Cores disponíveis para plotagem
     import matplotlib.colors as mcolors
@@ -75,7 +76,7 @@ def print_plano_cartesiano(solucao):
         x, y = zip(*pontos)
         
         # Plotar os pontos com a cor selecionada
-        plt.scatter(x, y, color=cor, label=f'PA na posição {coordenadas_PAs[i]}')
+        plt.scatter(x, y, color=cor, label=f'PA na posição {coordenadas_pas[i]}')
 
     # Adicionar legenda
     plt.legend()
@@ -88,11 +89,11 @@ def print_user(users):
     for user in users:
         print(user.coordenadas, " ", user.user_atendido)
 
-def plot_PAs(PAs):
+def plot_pas(pas):
     coordenadas = []
 
-    for PA in PAs:
-        coordenadas.append(PA.coordenadas)
+    for pa in pas:
+        coordenadas.append(pa.coordenadas)
     
 
     # Separando as coordenadas x e y das tuplas
@@ -111,3 +112,29 @@ def plot_PAs(PAs):
     plt.grid(True)
     plt.show()
 
+# Função para plotar os resultados da otimização
+def plotar_resultados_otimizacao(avaliacoes):
+    numero_pas = [tupla[0] for tupla in avaliacoes]
+    distancia = [tupla[1] for tupla in avaliacoes]
+    # Número total de iterações
+    num_iteracoes = len(avaliacoes)
+    # Criar uma lista de iterações sequenciais
+    iteracoes = list(range(1, num_iteracoes + 1))
+
+    # Configurações do gráfico
+    fig, ax1 = plt.subplots(figsize=(10, 6))
+    ax1.set_xlabel('Iteração')
+    ax1.set_ylabel('Distâncias', color='b')
+    ax1.plot(iteracoes, distancia, marker='o', linestyle='-', color='b')
+    ax1.tick_params(axis='y', labelcolor='b')
+    ax1.grid(True)
+
+    ax2 = ax1.twinx()
+    ax2.set_ylabel('PAs utilizados', color='r')
+    ax2.plot(iteracoes, numero_pas, marker='o', linestyle='-', color='r')
+    ax2.tick_params(axis='y', labelcolor='r')
+
+    plt.title('Evolução da solução para o número de PAs e distâncias')
+
+    # Exibir o gráfico
+    plt.show()

@@ -1,20 +1,20 @@
+# gerara_solucao.py
+
 import numpy as np
 import Iniciar_dados as init
-from print_resultados import plot_PAs
+from print_resultados import plot_pas
 
 N_USERS = 495
 
-def avaliar_fit(PAs_solution):
-    PAs_utilizados = len(PAs_solution)
+def avaliar_fit(pas_solution):
+    pas_utilizados = len(pas_solution)
     distancia_total = 0
 
-    for PA in PAs_solution:
-        for user in PA.usuarios_atendidos:
-            distancia_total += float(user.distancias_pas[PA.indice])
+    for pa in pas_solution:
+        for user in pa.usuarios_atendidos:
+            distancia_total += float(user.distancias_pas[pa.indice])
 
-    return (PAs_utilizados, distancia_total)
-
-
+    return (pas_utilizados, distancia_total)
 
 def criterio_parada(users):
     contador = 0
@@ -28,43 +28,38 @@ def criterio_parada(users):
     else:
         return False
 
-def atribuir_users(PA, users, indice):
-    PA_aux = PA
-    PA_aux.usuarios_atendidos = []
+def atribuir_users(pa, users, indice):
+    pa_aux = pa
+    pa_aux.usuarios_atendidos = []
     for user in users:
-        var = float(user.distancias_pas[indice])
-        if (float(user.distancias_pas[indice]) <= PA_aux.raio) and (PA_aux.banda_disponivel >= user.demandaRede) and (user.user_atendido == False):
-            PA_aux.usuarios_atendidos.append(user)
+        if (float(user.distancias_pas[indice]) <= pa_aux.raio) and (pa_aux.banda_disponivel >= user.demandaRede) and (user.user_atendido == False):
+            pa_aux.usuarios_atendidos.append(user)
             user.user_atendido = True
-            PA_aux.banda_disponivel = PA_aux.banda_disponivel - user.demandaRede
-            PA_aux.PA_ativado = True
-            user.PA_conectado = PA_aux.coordenadas
+            pa_aux.banda_disponivel = pa_aux.banda_disponivel - user.demandaRede
+            pa_aux.PA_ativado = True
+            user.PA_conectado = pa_aux.coordenadas
 
-        if PA_aux.banda_disponivel < 0.009:
+        if pa_aux.banda_disponivel < 0.009:
             break
-        
-        pass
 
-    return (PA_aux, users)
+    return (pa_aux, users)
 
-def PAs_utilizados(PAs):
-    count = 0
-    PAs_utilizados = []
-    for PA in PAs:
-        if PA.PA_ativado == True:
-            count += 1
-            PAs_utilizados.append(PA)
+def pas_utilizados(pas):
+    pas_utilizados = []
+    for pa in pas:
+        if pa.PA_ativado == True:
+            pas_utilizados.append(pa)
 
-    return PAs_utilizados
+    return pas_utilizados
 
 def get_solution(vetor):    
-    print("Runing...")
+    #print("Runing...")
     users = init.inicializar_users()
-    PAs = init.inicializar_PAs()
+    pas = init.inicializar_PAs()
     indices = np.argsort(vetor)
     for i in indices:
-        PAs[i], users = atribuir_users(PAs[i], users, i)
+        pas[i], users = atribuir_users(pas[i], users, i)
         if criterio_parada(users):
             break
     
-    return PAs_utilizados(PAs), users
+    return pas_utilizados(pas), users
