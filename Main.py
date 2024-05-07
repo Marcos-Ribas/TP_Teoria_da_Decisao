@@ -7,11 +7,12 @@ import Iniciar_dados as init
 import Gerar_solucao as solution
 import functions as func
 import copy
+import solucaoInicial
 
-#OBJETIVO_OTIMIZACAO = "numero_pas" 
-OBJETIVO_OTIMIZACAO = "distancias" 
+OBJETIVO_OTIMIZACAO = "numero_pas" 
+#OBJETIVO_OTIMIZACAO = "distancias" 
 
-VIZINHANCA = [1,2,3]
+VIZINHANCA = [1,2,3,4]
     
 def vnd(x, k_max):
     fitness_evolution = []
@@ -23,8 +24,8 @@ def vnd(x, k_max):
         vetor_solucoes = []
         vetor_prioridades = []
 
-        for i in range(10):
-            vetor_prioridades.append(copy.deepcopy(func.shake(list(x), VIZINHANCA[2])))
+        for i in range(50):
+            vetor_prioridades.append(copy.deepcopy(func.shake(list(x), VIZINHANCA[2], OBJETIVO_OTIMIZACAO)))
             vetor_solucoes.append(solution.avaliar_fit(solution.get_solution(vetor_prioridades[i])[0]))
 
         indice = min(enumerate(vetor_solucoes), key=lambda x: x[1][0])[0]
@@ -38,9 +39,9 @@ def vnd(x, k_max):
 
 
 
-vetor_prioridades = np.random.permutation(6400)
+solucao_inicial = solucaoInicial.gerar_sol_inicial(OBJETIVO_OTIMIZACAO)
 
-solucao = vnd(vetor_prioridades, 3)
+solucao = vnd(solucao_inicial, len(VIZINHANCA))
 
 # plotar resultados
 

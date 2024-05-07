@@ -46,47 +46,68 @@ def neighborhood_change(solucao_atual, prox_solucao, k, objetivo_otimizacao = "a
         return melhor_solucao, k
 
 
-def shake(vetor_prioridades, k):
+def shake(vetor_prioridades, k, objetivo):
     if k == 1:
         vetor_ordenado = np.argsort(vetor_prioridades)
         direcao_troca = random.choice(["N","S","L","W"])
-        posicao_troca = random.choice(vetor_ordenado[:5])
+        if objetivo == 'numero_pas':
+            posicao_troca = random.choice(vetor_ordenado[:10])
+        else:
+            posicao_troca = random.choice(vetor_ordenado[:30])
         
         if direcao_troca == "S" and posicao_troca-80 >= 0:
             vetor_prioridades[posicao_troca-80], vetor_prioridades[posicao_troca] = vetor_prioridades[posicao_troca], vetor_prioridades[posicao_troca-80]
 
-        elif direcao_troca == "N" and posicao_troca+80 <= 1600:
+        elif direcao_troca == "N" and posicao_troca+80 <= 6400:
             vetor_prioridades[posicao_troca+80], vetor_prioridades[posicao_troca] = vetor_prioridades[posicao_troca], vetor_prioridades[posicao_troca+80]
 
         elif direcao_troca == "L" and posicao_troca-1 >= 0:
             vetor_prioridades[posicao_troca-1], vetor_prioridades[posicao_troca] = vetor_prioridades[posicao_troca], vetor_prioridades[posicao_troca-1]
 
 
-        elif direcao_troca == "W" and posicao_troca+1 <= 1600:
+        elif direcao_troca == "W" and posicao_troca+1 <= 6400:
             vetor_prioridades[posicao_troca+1], vetor_prioridades[posicao_troca] = vetor_prioridades[posicao_troca], vetor_prioridades[posicao_troca+1]
 
     elif k == 2:
         for i in range (5):
             vetor_ordenado = np.argsort(vetor_prioridades)
             direcao_troca = random.choice(["N","S","L","W"])
-            posicao_troca = random.choice(vetor_ordenado[:5])
+            if objetivo == 'numero_pas':
+                posicao_troca = random.choice(vetor_ordenado[:10])
+            else:
+                posicao_troca = random.choice(vetor_ordenado[:30])
             
             if direcao_troca == "S" and posicao_troca-80 >= 0:
                 vetor_prioridades[posicao_troca-80], vetor_prioridades[posicao_troca] = vetor_prioridades[posicao_troca], vetor_prioridades[posicao_troca-80]
 
-            elif direcao_troca == "N" and posicao_troca+80 <= 1600:
+            elif direcao_troca == "N" and posicao_troca+80 <= 6400:
                 vetor_prioridades[posicao_troca+80], vetor_prioridades[posicao_troca] = vetor_prioridades[posicao_troca], vetor_prioridades[posicao_troca+80]
 
             elif direcao_troca == "L" and posicao_troca-1 >= 0:
                 vetor_prioridades[posicao_troca-1], vetor_prioridades[posicao_troca] = vetor_prioridades[posicao_troca], vetor_prioridades[posicao_troca-1]
 
-            elif direcao_troca == "W" and posicao_troca+1 <= 1600:
+            elif direcao_troca == "W" and posicao_troca+1 <= 6400:
                 vetor_prioridades[posicao_troca+1], vetor_prioridades[posicao_troca] = vetor_prioridades[posicao_troca], vetor_prioridades[posicao_troca+1]
 
     elif k == 3:
-        for i in range(20):
+        for i in range(1):
             vetor_ordenado = np.argsort(vetor_prioridades)
-            posicao_troca1 = random.choice(vetor_ordenado[:5])
+            if objetivo == 'numero_pas':
+                posicao_troca1 = random.choice(vetor_ordenado[:10])
+            else:
+                posicao_troca1 = random.choice(vetor_ordenado[:30])
+            posicao_troca2 = random.choice(vetor_ordenado)
+            
+            # Trocando os valores nas posições escolhidas
+            vetor_prioridades[posicao_troca1], vetor_prioridades[posicao_troca2] = vetor_prioridades[posicao_troca2], vetor_prioridades[posicao_troca1]
+
+    elif k == 4:
+        for i in range(5):
+            vetor_ordenado = np.argsort(vetor_prioridades)
+            if objetivo == 'numero_pas':
+                posicao_troca1 = random.choice(vetor_ordenado[:10])
+            else:
+                posicao_troca1 = random.choice(vetor_ordenado[:30])
             posicao_troca2 = random.choice(vetor_ordenado)
             
             # Trocando os valores nas posições escolhidas

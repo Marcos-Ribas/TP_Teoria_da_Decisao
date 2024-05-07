@@ -27,6 +27,7 @@ class pontos_acesso:
     PA_ativado = False
     raio = RAIO_PA
     indice = 0
+    total_distance = 0
 
     def __init__(self, coordenadas, indice):
         self.coordenadas = coordenadas
@@ -71,7 +72,7 @@ def atribuir_distancias(users):
     return users
         
             
-def inicializar_PAs():
+def inicializar_PAs(users):
     PAs = []
     indice = 0
 

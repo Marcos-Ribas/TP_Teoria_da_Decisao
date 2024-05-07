@@ -31,6 +31,7 @@ def criterio_parada(users):
 def atribuir_users(pa, users, indice):
     pa_aux = pa
     pa_aux.usuarios_atendidos = []
+    total_distance = 0
     for user in users:
         if (float(user.distancias_pas[indice]) <= pa_aux.raio) and (pa_aux.banda_disponivel >= user.demandaRede) and (user.user_atendido == False):
             pa_aux.usuarios_atendidos.append(user)
@@ -38,9 +39,11 @@ def atribuir_users(pa, users, indice):
             pa_aux.banda_disponivel = pa_aux.banda_disponivel - user.demandaRede
             pa_aux.PA_ativado = True
             user.PA_conectado = pa_aux.coordenadas
+            total_distance += float(user.distancias_pas[indice])
 
         if pa_aux.banda_disponivel < 0.009:
             break
+
 
     return (pa_aux, users)
 
@@ -55,7 +58,7 @@ def pas_utilizados(pas):
 def get_solution(vetor):    
     #print("Runing...")
     users = init.inicializar_users()
-    pas = init.inicializar_PAs()
+    pas = init.inicializar_PAs(users)
     indices = np.argsort(vetor)
     for i in indices:
         pas[i], users = atribuir_users(pas[i], users, i)
