@@ -2,6 +2,7 @@
 
 import matplotlib.pyplot as plt
 import random
+import numpy as np
 
 def plot_user(users):
     coordenadas = []
@@ -79,7 +80,7 @@ def print_plano_cartesiano(solucao):
         plt.scatter(x, y, color=cor, label=f'PA na posição {coordenadas_pas[i]}')
 
     # Adicionar legenda
-    plt.legend()
+    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
 
     plt.title(f'Número de user atendidos: {contador_users} \n número de PAs utilizados: {len(solucao)}')
     # Mostrar o gráfico 
@@ -138,3 +139,69 @@ def plotar_resultados_otimizacao(avaliacoes):
 
     # Exibir o gráfico
     plt.show()
+    
+def plotar_graficos_distancias(dados):
+    # Encontrar o comprimento máximo de todas as séries
+    max_len = max(len(sublist) for sublist in dados)
+
+    # Preparar os dados para plotagem
+    menores_valores = []  # Lista para armazenar os menores valores de cada dataset
+
+    for i, sublist in enumerate(dados):
+        y = [tupla[1] for tupla in sublist]
+        x = np.arange(1, max_len + 1)
+        if len(sublist) < max_len:
+            last_value = sublist[-1][1]
+            y += [last_value] * (max_len - len(sublist))
+        plt.plot(x, y, linestyle='-', label=f'Dataset {i+1}')
+        
+        # Encontrar o menor valor de cada dataset
+        menor_valor = min(sublist, key=lambda x: x[1])[1]
+        menores_valores.append(menor_valor)
+
+    # Configurações do gráfico
+    plt.title('Convergencia otimizacao distancias')
+    plt.xlabel('Índice')
+    plt.ylabel('Valores')
+    plt.grid(True)
+    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.show()
+
+    # Calcular min, std e max dos menores valores
+    menores_valores = np.array(menores_valores)
+    print("Min:", np.min(menores_valores))
+    print("Std:", np.std(menores_valores))
+    print("Max:", np.max(menores_valores))
+    
+def plotar_graficos_numeros(dados):
+    # Encontrar o comprimento máximo de todas as séries
+    max_len = max(len(sublist) for sublist in dados)
+
+    # Preparar os dados para plotagem
+    menores_valores = []  # Lista para armazenar os menores valores de cada dataset
+
+    for i, sublist in enumerate(dados):
+        y = [tupla[0] for tupla in sublist]
+        x = np.arange(1, max_len + 1)
+        if len(sublist) < max_len:
+            last_value = sublist[-1][0]
+            y += [last_value] * (max_len - len(sublist))
+        plt.plot(x, y, linestyle='-', label=f'Dataset {i+1}')
+        
+        # Encontrar o menor valor de cada dataset
+        menor_valor = min(sublist, key=lambda x: x[0])[0]
+        menores_valores.append(menor_valor)
+
+    # Configurações do gráfico
+    plt.title('Convergencia otimizacao numero pas')
+    plt.xlabel('Índice')
+    plt.ylabel('Valores')
+    plt.grid(True)
+    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.show()
+
+    # Calcular min, std e max dos menores valores
+    menores_valores = np.array(menores_valores)
+    print("Min:", np.min(menores_valores))
+    print("Std:", np.std(menores_valores))
+    print("Max:", np.max(menores_valores))
