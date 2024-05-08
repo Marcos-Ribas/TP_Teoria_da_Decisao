@@ -4,7 +4,7 @@ import numpy as np
 
 MALHA_PAS = 80
 BANDA_DISPONIVEL_PA = 54
-RAIO_PA = 85
+RAIO_PA = 42
 N_USERS = 495
 
 class usuarios:

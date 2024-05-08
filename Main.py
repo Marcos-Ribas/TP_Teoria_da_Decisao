@@ -9,8 +9,8 @@ import functions as func
 import copy
 import solucaoInicial
 
-OBJETIVO_OTIMIZACAO = "numero_pas" 
-#OBJETIVO_OTIMIZACAO = "distancias" 
+#OBJETIVO_OTIMIZACAO = "numero_pas" 
+OBJETIVO_OTIMIZACAO = "distancias" 
 
 VIZINHANCA = [1,2,3,4]
     
@@ -40,14 +40,14 @@ def vnd(x, k_max):
 
 
 solucao_inicial = solucaoInicial.gerar_sol_inicial(OBJETIVO_OTIMIZACAO)
-
-solucao = vnd(solucao_inicial, len(VIZINHANCA))
+solutions = []
+for i in range(10):
+    solutions.append(vnd(solucao_inicial, len(VIZINHANCA)))
 
 # plotar resultados
-
-fitness = solution.get_solution(solucao[0])
-
-print_resultados.print_solucao(fitness[0])
-print_resultados.print_plano_cartesiano(fitness[0])
-print_resultados.plot_pas(fitness[0])
-print_resultados.plotar_resultados_otimizacao(solucao[1])
+for solucao in solutions:
+    fitness = solution.get_solution(solucao[0])
+    print_resultados.print_solucao(fitness[0])
+    print_resultados.print_plano_cartesiano(fitness[0])
+    print_resultados.plot_pas(fitness[0])
+    print_resultados.plotar_resultados_otimizacao(solucao[1])

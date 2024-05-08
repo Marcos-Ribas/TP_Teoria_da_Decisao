@@ -3,18 +3,24 @@
 import numpy as np
 import Iniciar_dados as init
 from print_resultados import plot_pas
+MAXIMO_PAS = 30
 
 N_USERS = 495
 
 def avaliar_fit(pas_solution):
     pas_utilizados = len(pas_solution)
     distancia_total = 0
-
+    cont = 0
     for pa in pas_solution:
+        cont+=1
         for user in pa.usuarios_atendidos:
             distancia_total += float(user.distancias_pas[pa.indice])
 
-    return (pas_utilizados, distancia_total)
+    penalidade = 0
+    if cont > MAXIMO_PAS:
+        penalidade = cont - MAXIMO_PAS
+
+    return (pas_utilizados, distancia_total + penalidade*1000)
 
 def criterio_parada(users):
     contador = 0
