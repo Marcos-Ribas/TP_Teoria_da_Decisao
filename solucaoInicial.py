@@ -79,3 +79,49 @@ def gerar_sol_inicial(objetivo = 'numero_pas'):
     return vetor_prioridades
 
     #print(vetor_prioridades)
+
+def gerar_sol_inicial_30_pas():
+    # Carregar dados do arquivo
+    dados = np.loadtxt('clientes.txt', delimiter=',')
+
+    # Extrair coordenadas X, Y e demandas
+    X = dados[:, 0]
+    Y = dados[:, 1]
+    demands = dados[:, 2]
+
+    dados2 = np.column_stack((X, Y, demands))
+
+    # Aplicar algoritmo K-Means para encontrar 30 clusters, ponderados pelas demandas
+    kmeans = KMeans(n_clusters=30)
+    kmeans.fit(dados2, sample_weight=demands)
+    centroids_kmeans = kmeans.cluster_centers_
+
+    # Arredondar centroides para o múltiplo mais próximo de 5
+    centroides_arredondadas = np.round(centroids_kmeans[:, :2] / 5) * 5
+
+    # Mapear centroides para posições na grade
+    posicoes = []
+    for x in centroides_arredondadas:
+        posicoes.append(int((x[0] / 5) * 80 + (x[1] / 5)))
+
+    vetor_prioridades = np.random.permutation(6400)
+    i = 0
+    for elemento in posicoes:
+        indice = np.where(vetor_prioridades == i)
+        aux = vetor_prioridades[elemento]
+        vetor_prioridades[elemento] = i
+        vetor_prioridades[indice] = aux
+        i += 1
+    
+    #plt.figure(figsize=(10, 8))
+    #plt.scatter(X, Y, c='blue', label='Clientes')
+    #plt.scatter(centroids_kmeans[:, 0], centroids_kmeans[:, 1], c='red', marker='x', label='Centroides')
+
+    #plt.title('Bacias de Atração dos Centroides')
+    #plt.xlabel('Coordenada X')
+    #plt.ylabel('Coordenada Y')
+    #plt.legend()
+    #plt.grid(True)
+    #plt.show()
+
+    return vetor_prioridades
