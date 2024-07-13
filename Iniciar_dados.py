@@ -7,31 +7,32 @@ BANDA_DISPONIVEL_PA = 54
 RAIO_PA = 42
 N_USERS = 495
 
+Users = []
+PAs = []
+
 class usuarios:
     
-    coordenadas = ()
-    distancias_pas = []
-    PA_conectado = ()
-    user_atendido = False
-    demandaRede = 0
-
     def __init__(self, coordenadas = (0,0), demanda = 0):
         self.coordenadas = coordenadas
         self.demandaRede = demanda
+        self.coordenadas = ()
+        self.distancias_pas = []
+        self.PA_conectado = ()
+        self.user_atendido = False
+        self.demandaRede = 0
 
 class pontos_acesso:
-
-    coordenadas = ()
-    usuarios_atendidos = []
-    banda_disponivel = BANDA_DISPONIVEL_PA
-    PA_ativado = False
-    raio = RAIO_PA
-    indice = 0
-    total_distance = 0
 
     def __init__(self, coordenadas, indice):
         self.coordenadas = coordenadas
         self.indice = indice
+        self.usuarios_atendidos = []
+        self.raio = RAIO_PA
+        self.coordenadas = ()
+        self.banda_disponivel = BANDA_DISPONIVEL_PA
+        self.PA_ativado = False
+        self.indice = 0
+        self.total_distance = 0
 
 
 def ler_dados_csv():
@@ -93,3 +94,8 @@ def inicializar_users():
     
     return users
 
+def iniciar_dados():
+    global Users
+    global PAs
+    Users = inicializar_users()
+    PAs = inicializar_PAs(Users)

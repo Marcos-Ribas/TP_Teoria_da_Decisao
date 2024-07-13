@@ -2,9 +2,10 @@
 
 import numpy as np
 import Iniciar_dados as init
-from print_resultados import plot_pas
-MAXIMO_PAS = 30
+import copy
 
+
+MAXIMO_PAS = 30
 N_USERS = 495
 
 def avaliar_fit(pas_solution):
@@ -63,8 +64,8 @@ def pas_utilizados(pas):
 
 def get_solution(vetor):    
     #print("Runing...")
-    users = init.inicializar_users()
-    pas = init.inicializar_PAs(users)
+    users = [copy.copy(user) for user in init.Users]
+    pas = [copy.copy(pa) for pa in init.PAs]
     indices = np.argsort(vetor)
     for i in indices:
         pas[i], users = atribuir_users(pas[i], users, i)

@@ -205,3 +205,24 @@ def plotar_graficos_numeros(dados):
     print("Min:", np.min(menores_valores))
     print("Std:", np.std(menores_valores))
     print("Max:", np.max(menores_valores))
+
+
+def print_fronteira_pareto(fronteira):
+    x_values = [x for x, y in fronteira]
+    y_values = [y for x, y in fronteira]
+
+    # Criando o gráfico
+    plt.figure(figsize=(8, 6))
+
+    # Plotar os pontos usando scatter
+    plt.scatter(x_values, y_values, color='blue', label='Points')
+
+    # Adicionar título e rótulos
+    plt.title('Plot of Tuples (x, y)')
+    plt.xlabel('x values')
+    plt.ylabel('y values')
+    plt.legend()
+
+    # Mostrar o gráfico
+    plt.grid(True)
+    plt.show()
