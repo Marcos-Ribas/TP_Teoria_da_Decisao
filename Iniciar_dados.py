@@ -15,11 +15,9 @@ class usuarios:
     def __init__(self, coordenadas = (0,0), demanda = 0):
         self.coordenadas = coordenadas
         self.demandaRede = demanda
-        self.coordenadas = ()
         self.distancias_pas = []
         self.PA_conectado = ()
         self.user_atendido = False
-        self.demandaRede = 0
 
 class pontos_acesso:
 

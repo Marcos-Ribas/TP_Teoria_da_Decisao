@@ -6,6 +6,7 @@ import Gerar_solucao as solution
 import functions as func
 import copy
 import solucaoInicial
+import time
 
 OBJETIVO_OTIMIZACAO = "numero_pas" 
 #OBJETIVO_OTIMIZACAO = "distancias" 
@@ -55,7 +56,7 @@ def vnd(x, k_max):
 
 
 
-solucao_inicial = solucaoInicial.gerar_sol_inicial(OBJETIVO_OTIMIZACAO)
+solucao_inicial = solucaoInicial.gerar_sol_inicial_30_pas()
 solutions = []
 fronteira_pareto = []
 conjunto_fronteiras = []
@@ -64,7 +65,7 @@ numbers = generate_numbers(20, 45, 86)
 
 #solution.TECNICA_OTIMIZACAO = 'episilon_restrito'
 solution.TECNICA_OTIMIZACAO = 'soma_ponderada'
-
+tempo_execucao = time.time()
 for _ in range(5):
     fronteira_pareto = []
     for i in range(20):
@@ -74,9 +75,9 @@ for _ in range(5):
     
     conjunto_fronteiras.append(fronteira_pareto)
 
-
+tempo_execucao = time.time() - tempo_execucao
 print_resultados.print_fronteiras_pareto(conjunto_fronteiras)
-
+print("tempo de execucao:",tempo_execucao)
 # plotar resultados
 # for solucao in solutions:
 #     fitness = solution.get_solution(solucao[0])
