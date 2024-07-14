@@ -7,21 +7,63 @@ import copy
 
 MAXIMO_PAS = 30
 N_USERS = 495
+TECNICA_OTIMIZACAO = 'episilon_restrito'
+
+peso_nPAs = 1
+PESO_Distancias = 1
 
 def avaliar_fit(pas_solution):
-    pas_utilizados = len(pas_solution)
-    distancia_total = 0
-    cont = 0
-    for pa in pas_solution:
-        cont+=1
-        for user in pa.usuarios_atendidos:
-            distancia_total += float(user.distancias_pas[pa.indice])
+    
+    if TECNICA_OTIMIZACAO == 'episilon_restrito':
+        pas_utilizados = len(pas_solution)
+        distancia_total = 0
+        cont = 0
+        for pa in pas_solution:
+            cont+=1
+            for user in pa.usuarios_atendidos:
+                distancia_total += float(user.distancias_pas[pa.indice])
 
-    penalidade = 0
-    if cont > MAXIMO_PAS:
-        penalidade = cont - MAXIMO_PAS
+        penalidade = 0
+        if cont > MAXIMO_PAS:
+            penalidade = cont - MAXIMO_PAS
 
-    return (pas_utilizados, distancia_total + penalidade*1000)
+        return (pas_utilizados, distancia_total + penalidade*1000)
+    
+    if TECNICA_OTIMIZACAO == 'soma_ponderada':
+        pas_utilizados = len(pas_solution)
+        distancia_total = 0
+        cont = 0
+        for pa in pas_solution:
+            cont+=1
+            for user in pa.usuarios_atendidos:
+                distancia_total += float(user.distancias_pas[pa.indice])
+
+        penalidade = 0
+        if cont > MAXIMO_PAS:
+            penalidade = cont - MAXIMO_PAS
+
+        pas_utilizados_normalized, distancias_nomalized = normalize(pas_utilizados, distancia_total + penalidade*1000)
+
+        fit = peso_nPAs*pas_utilizados_normalized + PESO_Distancias*distancias_nomalized
+
+        return (pas_utilizados, distancia_total + penalidade*1000, fit)
+
+    
+
+    pass
+
+def normalize(x, y):
+    # Normaliza a variável x que varia de 0 a 30
+    x_min = 0
+    x_max = 30
+    x_normalized = (x - x_min) / (x_max - x_min)
+
+    # Normaliza a variável y que varia de 0 a 25000
+    y_min = 0
+    y_max = 25000
+    y_normalized = (y - y_min) / (y_max - y_min)
+
+    return x_normalized, y_normalized
 
 def criterio_parada(users):
     contador = 0

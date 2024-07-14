@@ -4,12 +4,19 @@ import numpy as np
 import random
 from Gerar_solucao import avaliar_fit
 from Gerar_solucao import get_solution
+import Gerar_solucao
 
 def neighborhood_change(solucao_atual, prox_solucao, k, objetivo_otimizacao = "ambos"):
 
-    n_pas_atual, distancia_total_atual = avaliar_fit(get_solution(solucao_atual)[0])
-    n_pas_prox, distancia_total_prox = avaliar_fit(get_solution(prox_solucao)[0])
-    melhor_solucao = solucao_atual
+    if Gerar_solucao.TECNICA_OTIMIZACAO == 'episilon_restrito':
+        n_pas_atual, distancia_total_atual = avaliar_fit(get_solution(solucao_atual)[0])
+        n_pas_prox, distancia_total_prox = avaliar_fit(get_solution(prox_solucao)[0])
+        melhor_solucao = solucao_atual
+    
+    if Gerar_solucao.TECNICA_OTIMIZACAO == 'soma_ponderada':
+        n_pas_atual, distancia_total_atual, fit_atual = avaliar_fit(get_solution(solucao_atual)[0])
+        n_pas_prox, distancia_total_prox, fit_prox = avaliar_fit(get_solution(prox_solucao)[0])
+        melhor_solucao = solucao_atual
 
     if(objetivo_otimizacao == "numero_pas"):
 
@@ -32,6 +39,18 @@ def neighborhood_change(solucao_atual, prox_solucao, k, objetivo_otimizacao = "a
             k = k + 1
 
         return melhor_solucao, k
+    
+    elif(Gerar_solucao.TECNICA_OTIMIZACAO == 'soma_ponderada'):
+        if fit_prox < fit_atual:
+            melhor_solucao = prox_solucao
+            print("solucao mudou")
+            k = 1
+        else:
+            k = k + 1
+
+        return melhor_solucao, k
+
+        
     
     else:
 

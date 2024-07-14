@@ -23,16 +23,17 @@ class usuarios:
 
 class pontos_acesso:
 
+    coordenadas = ()
+    banda_disponivel = BANDA_DISPONIVEL_PA
+    PA_ativado = False
+    indice = 0
+    total_distance = 0
+
     def __init__(self, coordenadas, indice):
         self.coordenadas = coordenadas
         self.indice = indice
         self.usuarios_atendidos = []
         self.raio = RAIO_PA
-        self.coordenadas = ()
-        self.banda_disponivel = BANDA_DISPONIVEL_PA
-        self.PA_ativado = False
-        self.indice = 0
-        self.total_distance = 0
 
 
 def ler_dados_csv():

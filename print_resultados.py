@@ -206,16 +206,41 @@ def plotar_graficos_numeros(dados):
     print("Std:", np.std(menores_valores))
     print("Max:", np.max(menores_valores))
 
+def pareto_frontier(vetor):
+    # Ordenar o vetor com base no primeiro valor da tupla (x)
+    vetor = sorted(vetor, key=lambda x: x[0])
+    
+    # Inicializar a lista da fronteira de Pareto
+    pareto_front = []
+    
+    # Variável para armazenar o menor valor de y encontrado até agora
+    max_y = float('inf')
+    
+    # Iterar sobre o vetor
+    for x, y in vetor:
+        # Verificar se a tupla (x, y) é não dominada
+        if y < max_y:
+            pareto_front.append((x, y))
+            max_y = y
 
-def print_fronteira_pareto(fronteira):
-    x_values = [x for x, y in fronteira]
-    y_values = [y for x, y in fronteira]
+    
+    return pareto_front
+
+
+
+def print_fronteiras_pareto(fronteiras):
+    # Lista de cores para as diferentes fronteiras
+    colors = plt.cm.tab10(np.linspace(0, 1, len(fronteiras)))
 
     # Criando o gráfico
     plt.figure(figsize=(8, 6))
 
-    # Plotar os pontos usando scatter
-    plt.scatter(x_values, y_values, color='blue', label='Points')
+    # Iterar sobre as fronteiras e plotar cada uma com uma cor diferente
+    for i, fronteira in enumerate(fronteiras):
+        fronteira_pareto = pareto_frontier(fronteira)
+        x_values = [x for x, y in fronteira_pareto]
+        y_values = [y for x, y in fronteira_pareto]
+        plt.scatter(x_values, y_values, color=colors[i], label=f'Fronteira {i+1}')
 
     # Adicionar título e rótulos
     plt.title('Plot of Tuples (x, y)')
