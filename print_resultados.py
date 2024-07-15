@@ -207,8 +207,20 @@ def plotar_graficos_numeros(dados):
     print("Max:", np.max(menores_valores))
 
 def pareto_frontier(vetor):
-    # Ordenar o vetor com base no primeiro valor da tupla (x)
-    vetor = sorted(vetor, key=lambda x: x[0])
+    # Dicionário para armazenar o menor valor de y para cada x
+    menores_valores = {}
+
+    # Itera sobre a lista de tuplas
+    for x, y in vetor:
+        # Se x não estiver no dicionário ou y for menor que o valor atual de x no dicionário, atualiza o dicionário
+        if x not in menores_valores or y < menores_valores[x]:
+            menores_valores[x] = y
+
+    # Converte o dicionário de volta para uma lista de tuplas
+    vetor_reduzido = [(x, y) for x, y in menores_valores.items()]
+
+    # Ordenar o vetor reduzido com base no primeiro valor da tupla (x)
+    vetor_reduzido = sorted(vetor_reduzido, key=lambda x: x[0])
     
     # Inicializar a lista da fronteira de Pareto
     pareto_front = []
@@ -216,37 +228,40 @@ def pareto_frontier(vetor):
     # Variável para armazenar o menor valor de y encontrado até agora
     max_y = float('inf')
     
-    # Iterar sobre o vetor
-    for x, y in vetor:
+    # Iterar sobre o vetor reduzido
+    for x, y in vetor_reduzido:
         # Verificar se a tupla (x, y) é não dominada
         if y < max_y:
             pareto_front.append((x, y))
             max_y = y
 
-    
     return pareto_front
 
-
-
 def print_fronteiras_pareto(fronteiras):
-    # Lista de cores para as diferentes fronteiras
-    colors = plt.cm.tab10(np.linspace(0, 1, len(fronteiras)))
-
+    # Combinar todas as fronteiras em uma única lista
+    todas_solucoes = [ponto for fronteira in fronteiras for ponto in fronteira]
+    
+    # Determinar os limites dos eixos
+    x_values = [x for x, y in todas_solucoes]
+    y_values = [y for x, y in todas_solucoes]
+    x_min, x_max = min(x_values) - 1, max(x_values) + 1
+    y_min, y_max = min(y_values) - 1, max(y_values) + 1
+    
     # Criando o gráfico
     plt.figure(figsize=(8, 6))
 
-    # Iterar sobre as fronteiras e plotar cada uma com uma cor diferente
-    for i, fronteira in enumerate(fronteiras):
-        fronteira_pareto = pareto_frontier(fronteira)
-        x_values = [x for x, y in fronteira_pareto]
-        y_values = [y for x, y in fronteira_pareto]
-        plt.scatter(x_values, y_values, color=colors[i], label=f'Fronteira {i+1}')
+    # Calcular a fronteira de Pareto para todas as soluções combinadas
+    fronteira_pareto = pareto_frontier(todas_solucoes)
+    for x, y in fronteira_pareto:
+        plt.scatter(x, y, color='red')
 
     # Adicionar título e rótulos
     plt.title('Plot of Tuples (x, y)')
     plt.xlabel('x values')
     plt.ylabel('y values')
-    plt.legend()
+    plt.xlim(x_min, x_max)
+    plt.ylim(y_min, y_max)
+    plt.legend('Fronteira Pareto')
 
     # Mostrar o gráfico
     plt.grid(True)
