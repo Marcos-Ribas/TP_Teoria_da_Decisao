@@ -18,11 +18,10 @@ def avaliar_fit(pas_solution):
     pas_utilizados = len(pas_solution)
     distancia_total = 0
     cont = 0
+    
     for pa in pas_solution:
-        cont+=1
-        for user in pa.usuarios_atendidos:
-            distancia_total += float(user.distancias_pas[pa.indice])
-
+        pa.total_distance = sum(float(user.distancias_pas[pa.indice]) for user in pa.usuarios_atendidos)
+        distancia_total += pa.total_distance
     penalidade = 0
     if cont > MAXIMO_PAS or restricoes.restricao_exposicao(pas_solution):
         penalidade = cont - MAXIMO_PAS

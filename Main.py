@@ -7,6 +7,7 @@ import functions as func
 import copy
 import solucaoInicial
 import time
+import export_to_json
 
 OBJETIVO_OTIMIZACAO = "numero_pas" 
 #OBJETIVO_OTIMIZACAO = "distancias" 
@@ -30,29 +31,43 @@ def generate_numbers(total_numbers, low, high):
     return result[:total_numbers]
 
 def vnd(x, k_max):
+    solucoes_objs = []
     fitness_evolution = []
     k = 1
-    print(solution.avaliar_fit(solution.get_solution(x)[0]))
+    current_solution, current_users = solution.get_solution(x)
+    current_fitness = solution.avaliar_fit(current_solution)
+    print(current_fitness)
 
-    while(k <= k_max):
-        print("K = ", k)
+    while k <= k_max:
+        print("K =", k)
         vetor_solucoes = []
         vetor_prioridades = []
 
+        # Generate neighborhood solutions
         for i in range(30):
-            vetor_prioridades.append(copy.deepcopy(func.shake(list(x), VIZINHANCA[2], OBJETIVO_OTIMIZACAO)))
-            vetor_solucoes.append(solution.avaliar_fit(solution.get_solution(vetor_prioridades[i])[0]))
+            priority_list = copy.deepcopy(func.shake(list(x), VIZINHANCA[2], OBJETIVO_OTIMIZACAO))
+            vetor_prioridades.append(priority_list)
+            solution_candidate, users_candidate = solution.get_solution(priority_list)
+            fitness_candidate = solution.avaliar_fit(solution_candidate)
+            vetor_solucoes.append((priority_list, fitness_candidate, solution_candidate))
 
-        indice = min(enumerate(vetor_solucoes), key=lambda x: x[1][0])[0]
-        x_linha = vetor_prioridades[indice]
+        # Find the best solution in the neighborhood
+        best_priority_list, best_fitness, best_solution = min(vetor_solucoes, key=lambda item: item[1][0])
         
-        x, k = func.neighborhood_change(x, x_linha, k, OBJETIVO_OTIMIZACAO)
-        fitness_evolution.append(solution.avaliar_fit(solution.get_solution(x)[0]))
-        print(solution.avaliar_fit(solution.get_solution(x)[0]))
+        if best_fitness[0] < current_fitness[0]:
+            x = best_priority_list
+            current_solution = best_solution
+            current_fitness = best_fitness
+            k = 1
+        else:
+            k += 1
 
-    avaliacao = solution.avaliar_fit(solution.get_solution(x)[0])
-    fronteira_pareto.append(avaliacao[:2])
-    return x, fitness_evolution
+        fitness_evolution.append(current_fitness)
+    
+    solucoes_objs.append((current_solution, current_users, current_fitness[:2]))
+    fronteira_pareto.append(current_fitness[:2])
+    return x, fitness_evolution, solucoes_objs
+
 
 
 
@@ -66,18 +81,22 @@ numbers = generate_numbers(20, 45, 86)
 #solution.TECNICA_OTIMIZACAO = 'episilon_restrito'
 solution.TECNICA_OTIMIZACAO = 'soma_ponderada'
 tempo_execucao = time.time()
-for _ in range(5):
+solucoes_objs = []
+for _ in range(20):
     fronteira_pareto = []
     for i in range(20):
         init.RAIO_PA = numbers[i]
         init.iniciar_dados()
-        solutions.append(vnd(solucao_inicial, len(VIZINHANCA)))
+        x, y, objs = vnd(solucao_inicial, len(VIZINHANCA))
+        solutions.append((x, y))
+        solucoes_objs.append(objs)
     
     conjunto_fronteiras.append(fronteira_pareto)
-
 tempo_execucao = time.time() - tempo_execucao
 print_resultados.print_fronteiras_pareto(conjunto_fronteiras)
 print("tempo de execucao:",tempo_execucao)
+export_to_json.export_solutions_to_json(solucoes_objs)
+export_to_json.export_pareto_to_json(solucoes_objs)
 # plotar resultados
 # for solucao in solutions:
 #     fitness = solution.get_solution(solucao[0])
